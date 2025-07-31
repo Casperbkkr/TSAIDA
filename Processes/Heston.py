@@ -1,5 +1,5 @@
 import numpy as np
-from Process import Wiener as wien
+from Processes import Wiener as wien
 
 def CIR(theta, sigma, mu, T, n_samples, n_steps, S0, Wt=np.array([0.0])):
     if Wt.shape[0] == 1:
