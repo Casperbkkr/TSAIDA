@@ -1,8 +1,6 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-from Processes import Events as ev
-from Processes import Heston as hes
 from Codes import Subsampling as ss
 from Codes import Path_signature as ps
 from Experiments import Score as sc

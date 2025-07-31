@@ -1,18 +1,12 @@
-import numpy as np
-
-from cProfile import label
-
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 sns.set_theme()
 import roughpy as rp
-from Processes import Events as ev
-from Processes import Heston as hes
 from Codes import Subsampling as ss
 from Codes import Path_signature as ps
 from Codes import AIDA as aida
-import gc
+
 
 def sliding_window(path, size, step):
     windows = np.lib.stride_tricks.sliding_window_view(path, size, axis=0)

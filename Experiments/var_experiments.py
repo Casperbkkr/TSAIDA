@@ -1,10 +1,6 @@
-from cProfile import label
-
 import matplotlib.pyplot as plt
 import numpy as np
 import roughpy as rp
-from Processes import Events as ev
-from Processes import Heston as hes
 from Codes import Subsampling as ss
 from Codes import Path_signature as ps
 import gc

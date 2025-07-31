@@ -1,17 +1,14 @@
-from cProfile import label
 import pathlib
 
 
 import matplotlib.pyplot as plt
 import numpy as np
 import roughpy as rp
-from Processes import Events as ev
-from Processes import Heston as hes
 from Codes import Subsampling as ss
 from Codes import Path_signature as ps
 import time
 
-from Processes import Wiener as wien
+from Data.Processes import Wiener as wien, Heston as hes, Events as ev
 
 K=3
 
@@ -42,7 +39,7 @@ data_set_jump = np.zeros(shape=[n_experiments, n_steps, n_samples])
 anom_indices = np.zeros(shape=[n_experiments, n_steps])
 
 epoch_time = int(time.time())
-new_dir = pathlib.Path('Synth_data', "jump_data_" + str(epoch_time))
+new_dir = pathlib.Path('../Synth_data', "jump_data_" + str(epoch_time))
 new_dir.mkdir(parents=True, exist_ok=True)
 new_file = new_dir / 'Parameters.txt'
 new_file.write_text('Theta = ' + str(the) + '\nsigma = ' + str(sigm) +

@@ -1,12 +1,8 @@
-
-from cProfile import label
 import pathlib
 import time
-import matplotlib.pyplot as plt
 import numpy as np
 
-from Processes import Heston as hes
-from Processes import Wiener as wien
+from Data.Processes import Wiener as wien, Heston as hes
 
 n_experiments = 100
 n_samples = 20
@@ -39,7 +35,7 @@ rho[1000:1500,:] = 1
 
 
 epoch_time = int(time.time())
-new_dir = pathlib.Path('Synth_data', "corr_data_" + str(epoch_time))
+new_dir = pathlib.Path('../Synth_data', "corr_data_" + str(epoch_time))
 new_dir.mkdir(parents=True, exist_ok=True)
 new_file = new_dir / 'Parameters.txt'
 new_file.write_text('Theta = ' + str(the) + '\nsigma = ' + str(sigm) +
