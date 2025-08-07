@@ -3,9 +3,9 @@ import numpy as np
 import seaborn as sns
 sns.set_theme()
 import roughpy as rp
-from Codes import Subsampling as ss
-from Codes import Path_signature as ps
-from Codes import AIDA as aida
+from TS_AIDA import Subsampling as ss
+from TS_AIDA import Path_signature as ps
+from TS_AIDA import AIDA as aida
 
 
 def sliding_window(path, size, step):

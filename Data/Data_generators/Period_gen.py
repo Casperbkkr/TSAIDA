@@ -10,7 +10,6 @@ import seaborn as sns
 
 
 sns.set_theme()
-
 T = 1000
 dim = 10
 steps = 10000
@@ -91,7 +90,7 @@ new_file.write_text('transpose = ' + str(trans_para) +
                         '\ncauchy_scale = ' + str(cauchy_scale)
                     )
 
-np.save("Synth_data/period_data_" + str(epoch_time) + "/jump", sin_out)
-np.save("Synth_data/period_data_" + str(epoch_time) + "/anom", anom_out)
+np.save("../Synth_data/period_data_" + str(epoch_time) + "/data", sin_out)
+np.save("../Synth_data/period_data_" + str(epoch_time) + "/anom", anom_out)
 
 

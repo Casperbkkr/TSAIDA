@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import roughpy as rp
-from prompt_toolkit.search import start_search
 
-from Codes import Window as Wd
-from Codes import AIDA as AIDA
-from Codes import Path_signature as Ps
+
+from TS_AIDA import Window as Wd
+from TS_AIDA import AIDA as AIDA
+from TS_AIDA import Path_signature as Ps
 
 
 def Random_subsampler(paths, N, parameters, local=False, window_corrected=False, dim_corrected=False, seed=None):
@@ -58,6 +58,11 @@ def Random_subsampler(paths, N, parameters, local=False, window_corrected=False,
 
     return (sample_lengths, sample_start, sample_end, sample_d)
 
+
+def Exclusion_zone(sample_start, sample_end, r):
+
+
+    return
 def Sample_n(N, n_samples_min_max, rng):
     return rng.integers(low=n_samples_min_max[0], high=n_samples_min_max[1], size=N)
 

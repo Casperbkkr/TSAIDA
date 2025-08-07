@@ -73,5 +73,5 @@ new_file.write_text('transpose = ' + str(trans_para) +
                         '\ncauchy_scale = ' + str(cauchy_scale)
                     )
 
-np.save("Synth_data/Noise_data_" + str(epoch_time) + "/jump", sin_out)
-np.save("Synth_data/Noise_data_" + str(epoch_time) + "/anom", anom_out)
+np.save("../Synth_data/Noise_data_" + str(epoch_time) + "/data", sin_out)
+np.save("../Synth_data/Noise_data_" + str(epoch_time) + "/anom", anom_out)

@@ -1,17 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import roughpy as rp
-import scipy.stats as stats
-from networkx.algorithms.matching import min_weight_matching
+
 import pandas as pd
-from Codes import Subsampling as ss
-from Codes import Classifier as cl
-from Codes import Random_subsampling as ss2
+from TS_AIDA import Subsampling as ss
+from TS_AIDA import AIDA as AI
+
+from TS_AIDA import Random_subsampling as ss2
 import seaborn as sns
 sns.set_theme()
 
-data = np.load("/Users/casperbakker/Documents/PycharmProjects/Thesis/Experiments/Data_gen/Synth_data/Noise_data_1753872210/jump.npy")
-anom = np.load("/Users/casperbakker/Documents/PycharmProjects/Thesis/Experiments/Data_gen/Synth_data/Noise_data_1753872210/anom.npy")
+data = np.load("/Users/casperbakker/PycharmProjects/PythonProject/Data/Synth_data/period_data_1754391695/data.npy")
+anom = np.load("/Users/casperbakker/PycharmProjects/PythonProject/Data/Synth_data/period_data_1754391695/anom.npy")
 
 def sig_rp(X, K, interval, indices, context):
     times = indices
@@ -27,7 +27,7 @@ f = lambda X: X
 sig_scores = np.zeros(shape=100)
 dis_scores = np.zeros(shape=100)
 
-N = 100
+N = 50
 min_w = 30
 max_w = 500
 parameters = (30, 500, 2, 10, 20, 50,  5)
@@ -50,15 +50,36 @@ for i in range(1):
     for d in range(10):#data.shape[3]):
         sample = data[i, :, :, d]
 
+        sig_out_local[:,d] = -1* ss.Score_aggregator(sample, sample_info_local, K, T, sig =True)[0][200:-200]
+        dis_out_local[:,d] = ss.Score_aggregator(sample, sample_info_local, K, T, sig =False)[0][200:-200]
 
-        sig_out_local[:,d] = -1* ss.Score_aggregator(sample, sample_info_local, K, T)[0][200:-200]
-        dis_out_local[:,d] = ss.sub_sampler(sample, sample_info_local, f)[0][200:-200]
+        sig_out_corr[:,d] = -1* ss.Score_aggregator(sample, sample_info_corr, K, T, sig =True)[0][200:-200]
+        dis_out_corr[:,d] = ss.Score_aggregator(sample, sample_info_corr, K, T, sig =False)[0][200:-200]
 
-        sig_out_corr[:,d] = -1* ss.Score_aggregator(sample, sample_info_corr, K, T)[0][200:-200]
-        dis_out_corr[:,d] = ss.sub_sampler(sample, sample_info_corr, f)[0][200:-200]
+        sig_out_stand[:,d] = -1* ss.Score_aggregator(sample, sample_info,K, T, sig =True)[0][200:-200]
+        dis_out_stand[:,d] = ss.Score_aggregator(sample, sample_info, K, T, sig =False)[0][200:-200]
+    y= [1 for i in range(10)]
+    sig_out_local_p = AI.DistanceProfile(sig_out_local[:,0], sig_out_local.transpose())
+    dis_out_local_p = AI.DistanceProfile(dis_out_local[:,0], dis_out_local.transpose())
+    sig_out_corr_p = AI.DistanceProfile(sig_out_corr[:,0], sig_out_corr.transpose())
+    dis_out_corr_p = AI.DistanceProfile(dis_out_corr[:,0], dis_out_corr.transpose())
+    sig_out_stand_p = AI.DistanceProfile(sig_out_stand[:,0], sig_out_stand.transpose())
+    dis_out_stand_p = AI.DistanceProfile(dis_out_stand[:,0], dis_out_stand.transpose())
 
-        sig_out_stand[:,d] = -1* ss.Score_aggregator(sample, sample_info, K, T)[0][200:-200]
-        dis_out_stand[:,d] = ss.sub_sampler(sample, sample_info, f)[0][200:-200]
+
+    plt.scatter(sig_out_local_p/np.max(sig_out_local_p),[1 for i in range(10)], label=1)
+    plt.scatter(sig_out_corr_p/np.max(sig_out_corr_p),[3 for i in range(10)], label=3)
+    plt.scatter(sig_out_stand_p / np.max(sig_out_stand_p), [5 for i in range(10)], label=5)
+
+    plt.legend()
+
+    plt.show()
+    plt.scatter(dis_out_local_p / np.max(dis_out_local_p), [2 for i in range(10)], label=2)
+    plt.scatter(dis_out_corr_p/np.max(dis_out_corr_p),[4 for i in range(10)], label=4)
+    plt.scatter(dis_out_stand_p/np.max(dis_out_stand_p),[6 for i in range(10)], label=6)
+    plt.legend()
+
+    plt.show()
 
     for d in range(10):
         plt.plot(sig_out_local[4000:6000,d], label=str(d))
@@ -92,40 +113,7 @@ for i in range(1):
     plt.show()
 
 
-    """
-        df_sig = pd.DataFrame()
-        df_sig["Signature local"] = sig_corr
-        df_sig["Signature corrected"] = sig_local
-        df_sig["Signature standard"] = sig_stand
 
-        df_dis = pd.DataFrame()
-        df_dis["Distance local"] = dis_local
-        df_dis["Distance corrected"] = dis_corr
-        df_dis["Distance standard"] = dis_stand
-
-        df_sig.plot(subplots=True)
-        plt.title("min_w=" + str(min_w) + ", max_w=" + str(max_w))
-        plt.legend()
-        plt.ylabel("Outlier score")
-        plt.xlabel("Time")
-        plt.show()
-
-        df_dis.plot(subplots=True)
-        plt.title("min_w=" + str(min_w) + ", max_w=" + str(max_w))
-        plt.ylabel("Outlier score")
-        plt.xlabel("Time")
-        plt.legend()
-        plt.show()
-        """
-    """
-    sig_t, sig_score = cl.Max_perf(output_sig, anom_sample)
-
-    dis_t, dis_score = cl.Max_perf(output_dis, anom_sample)
-    sig_scores[i] = np.max(sig_score)
-    dis_scores[i] = np.max(dis_score)
-    print(np.max(sig_score))
-    print(np.max(dis_score))
-    """
 
 print(sig_scores.avg())
 print(dis_scores.avg())
@@ -133,12 +121,3 @@ print(dis_scores.avg())
 
 
 
-
-
-
-plt.plot(output_dis, label="Distance")
-plt.plot(output_sig, label="Signature")
-plt.ylabel("Outlier score")
-plt.xlabel("Time")
-plt.legend()
-plt.show()

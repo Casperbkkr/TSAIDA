@@ -1,9 +1,9 @@
 import numpy as np
 import math
 
-from scipy.spatial.distance import mahalanobis
 
-from Codes.Relative_contrast import rel_contrast
+
+from TS_AIDA.Relative_contrast import rel_contrast
 
 def Eu_norm(X, Ys, p=1):
 	Xs = np.repeat(X, Ys.shape[0], axis=0)

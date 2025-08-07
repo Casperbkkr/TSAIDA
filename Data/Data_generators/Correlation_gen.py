@@ -50,7 +50,7 @@ for experiment in range(n_experiments):
     print(experiment)
     dW = wien.Correlated_Wiener(rho, T, n_steps, n_samples, c_range=c_range)
     data_out[experiment,:,:] = hes.CIR(thet, sigma, mu, T, n_samples, n_steps, S0, dW)
-    np.save("Synth_data/corr_data_" + str(epoch_time)+"/cor_data", data_out)
+    np.save("../Synth_data/corr_data_" + str(epoch_time)+"/cor_data", data_out)
 
 
 

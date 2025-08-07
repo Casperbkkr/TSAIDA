@@ -208,7 +208,7 @@ def Hawkes(rate, T, n_steps):
     event_location = rng.poisson(lam=rate_dt, size=n_steps)[]
     for i in range(n_steps):
         if event_location[i] == 1:
-            rate =
+            rate =1
 
 
 

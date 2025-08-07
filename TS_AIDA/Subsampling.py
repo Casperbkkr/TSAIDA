@@ -1,11 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import roughpy as rp
-from prompt_toolkit.search import start_search
 
-from Codes import Window as Wd
-from Codes import AIDA as AIDA
-from Codes import Path_signature as Ps
+
+from TS_AIDA import Window as Wd
+from TS_AIDA import AIDA as AIDA
+from TS_AIDA import Path_signature as Ps
 def sampler(paths, sample_info, i):
     paths = paths[:, sample_info[3][i]]
 
@@ -20,6 +20,8 @@ def sampler(paths, sample_info, i):
     subsample = np.take_along_axis(windows, A, axis=0)
 
     return subsample
+
+
 
 
 def Score_aggregator(paths, sample_info, K, T, normalize=True, sig=False):
@@ -50,6 +52,7 @@ def Score_aggregator(paths, sample_info, K, T, normalize=True, sig=False):
         contrast = np.zeros(shape=[s3.shape[0], 1])
 
         for j in range(s3.shape[0]):
+            #excl = Exclusion_zone(s3[j, :], s3, r)
             score_mean, score_var, cont = AIDA.Score(s3[j, :], s3)
             contrast[j] = cont
             a = sample_info[1][i][j]

@@ -5,10 +5,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set_theme()
 import roughpy as rp
-from Codes import Subsampling as ss
-from Codes import Random_subsampling as ss2
-from Codes import Path_signature as ps
-from Codes import Classifier as cl
+from TS_AIDA import Subsampling as ss
+from TS_AIDA import Random_subsampling as ss2
+from TS_AIDA import Path_signature as ps
 
 
 Data = pd.read_csv("/Users/casperbakker/Documents/PycharmProjects/Thesis/Experiments/FinData/FinData.csv")
@@ -16,8 +15,6 @@ Data.fillna(method='bfill', inplace=True)
 Data_np = Data.to_numpy()[:,1:]
 Data_np = Data_np.astype(float)
 
-Data.plot()
-plt.show()
 
 Data_np = Data_np / Data_np.max(axis=0)
 plt.plot(Data_np)
@@ -35,14 +32,7 @@ sample_info_corr = ss2.Random_subsampler(Data_np, N=N, parameters=parameters, lo
 sample_info_corr_dim = ss2.Random_subsampler(Data_np, N=N, parameters=parameters)
 
 sample_info = ss2.Random_subsampler(Data_np, N=N, parameters=parameters, local=True, window_corrected=True, dim_corrected=True)
-"""
-sample_info_local = ss.local_search(Data_np, N=N, n_samples_min_max=[20, 50], length_min_max=[20, 200],
-                                 dim_min_max=(2,4))
-sample_info_corr = ss.local_search_corr(Data_np, N=N, n_samples_min_max=[20, 50], length_min_max=[20, 200],
-                                 dim_min_max=(2, 4))
-sample_info = ss.sub_sample(Data_np, N=N, n_samples_min_max=[20, 50], length_min_max=[20, 200],
-                                 dim_min_max=(2, 4))
-"""
+
 
 f = lambda X: X
 T = 1
@@ -59,9 +49,9 @@ dis_stand = ss.Score_aggregator(Data_np, sample_info, K, T, sig=False)[0]
 
 df_sig = pd.DataFrame(index=Data["observation_date"])
 df_sig["Signature local"] = sig_local
-df_sig["dis_local"] = dis_local
+#df_sig["dis_local"] = dis_local
 df_sig["Signature local N"] = sig_local_N
-df_sig["dis_local N "] = dis_local_N
+#df_sig["dis_local N "] = dis_local_N
 
 df_sig.plot(
 )
@@ -99,4 +89,3 @@ plt.show()
 
 
 
-a=1
