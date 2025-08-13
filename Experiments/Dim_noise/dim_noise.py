@@ -32,7 +32,7 @@ min_w = 30
 max_w = 500
 parameters = (min_w, max_w, 2, 10, 20, 50,  5)
 
-tracker_file_name = "/Users/casperbakker/PycharmProjects/PythonProject/Data/Synth_data/period_data_1754391695/tracker.txt"
+tracker_file_name = "/Data/Synth_data/Period/period_data_1754391695/tracker.txt"
 tracker_file = open(tracker_file_name)
 start = int(tracker_file.read()) + 1
 tracker_file.close()

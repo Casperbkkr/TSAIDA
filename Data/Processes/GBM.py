@@ -1,10 +1,10 @@
 import numpy as np
 
-def GBM(S0, r, sigma, T, n_samples, n_steps):
+def GBM(S0, r, sigma, T, n_samples, n_steps, wiener):
 
     dt = float(T) / n_steps
     rng = np.random.default_rng(seed=1)
-    rand = rng.normal(loc=0, scale=1, size=[n_steps, n_samples])
+    rand =wiener
 
     A = (r-0.5*sigma**2)*dt + sigma * np.sqrt(dt)*rand
 
@@ -14,7 +14,7 @@ def GBM(S0, r, sigma, T, n_samples, n_steps):
 
     D = np.concatenate((C, B), axis=0)
 
-    return np.cumprod(D, axis=0), D
+    return np.cumprod(D, axis=0)[:-1], D
 
 def GBM_Jumps(paths, T, rate, mean, var):
     n_steps, n_samples = paths.shape

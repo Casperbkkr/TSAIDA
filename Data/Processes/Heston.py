@@ -18,8 +18,10 @@ def CIR(theta, sigma, mu, T, n_samples, n_steps, S0, Wt=np.array([0.0])):
     paths = np.zeros(shape=(n_steps, n_samples))
     paths[0,:] = S0
     for i in range(1, n_steps):
-        paths[i,:] = paths[i-1,:]*A[i-1,:] + B[i-1,:] + C[i-1,:]*np.sqrt(paths[i-1,:])
 
+#, -1*paths[i-1,:], paths[i-1,:])
+        paths[i,:] = paths[i-1,:]*A[i-1,:] + B[i-1,:] + C[i-1,:]*np.sqrt(paths[i-1])
+        paths[i,:] = np.maximum(paths[i, :], -1 * paths[i, :])
     return paths
 
 def CIR_shift(theta, sigma, mu, T, n_samples, n_steps, S0):
@@ -36,6 +38,7 @@ def CIR_shift(theta, sigma, mu, T, n_samples, n_steps, S0):
     paths = np.zeros(shape=(n_steps, n_samples))
     paths[0,:] = S0
     for i in range(1, n_steps):
+        M = np.maximum(paths[i-1,:], -1* paths[i-1,:])
         paths[i,:] = paths[i-1,:]*A[i-1,:] + B[i-1,:] + C[i-1,:]*np.sqrt(paths[i-1,:])
 
     return paths

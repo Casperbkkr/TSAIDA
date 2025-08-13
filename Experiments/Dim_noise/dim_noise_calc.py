@@ -17,7 +17,7 @@ dis_local_score = np.load("/Users/casperbakker/PycharmProjects/PythonProject/Dat
 sig_global_score = np.load("/Users/casperbakker/PycharmProjects/PythonProject/Data/Synth_data/" + file_name + "/dim_noise_sig_global.npy")
 dis_global_score = np.load("/Users/casperbakker/PycharmProjects/PythonProject/Data/Synth_data/" + file_name + "/dim_noise_dis_global.npy")
 
-tracker_file_name = "/Users/casperbakker/PycharmProjects/PythonProject/Data/Synth_data/period_data_1754391695/tracker.txt"
+tracker_file_name = "/Data/Synth_data/period_data_1754391695/tracker.txt"
 tracker_file = open(tracker_file_name)
 start = int(tracker_file.read())
 tracker_file.close()
@@ -62,9 +62,15 @@ dis_local_corr_dim_noise_gl = np.average(distance_dim_noise(dis_global_score[:,:
 dis_stand_dim_noise_gl = np.average(distance_dim_noise(dis_global_score[:,:,:,3], range_start, range_end, start), axis=0)
 
 plt.plot(sig_local_corr_dim_noise, label="Signature local")
-plt.plot(dis_local_corr_dim_noise, label="Distance local")
-plt.plot(sig_local_corr_dim_noise_gl, label="Signature global")
-plt.plot(dis_local_corr_dim_noise_gl, label="Distance global")
+#plt.plot(sig_local_corr_dim_noise_gl, label="Signature global")
+
+plt.plot(sig_local_dim_noise, label="Signature dim local")
+#plt.plot(sig_local_dim_noise_gl, label="Signature dim global")
+
+plt.plot(sig_stand_dim_noise, label="Signature standard local")
+#plt.plot(sig_stand_dim_noise_gl, label="Signature standard global")
+
+
 plt.xlabel("Dimension of anomaly occurence")
 plt.ylabel("Distance to base case (normalized)")
 plt.title("Dimensional noise effect on signature")
@@ -72,6 +78,14 @@ plt.title("Dimensional noise effect on signature")
 plt.legend()
 plt.show()
 
+plt.plot(dis_local_corr_dim_noise, label="Distance local")
+plt.plot(dis_local_corr_dim_noise_gl, label="Distance global")
+plt.xlabel("Dimension of anomaly occurence")
+plt.ylabel("Distance to base case (normalized)")
+plt.title("Dimensional noise effect on signature")
+#plt.ylim(0,1)
+plt.legend()
+plt.show()
 
 
 

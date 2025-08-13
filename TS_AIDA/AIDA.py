@@ -5,7 +5,7 @@ import math
 
 from TS_AIDA.Relative_contrast import rel_contrast
 
-def Eu_norm(X, Ys, p=1):
+def Eu_norm(X, Ys, p=2):
 	Xs = np.repeat(X, Ys.shape[0], axis=0)
 	dif = (np.abs(Xs - Ys)) ** p
 	return np.sum(dif, axis=1)
@@ -61,7 +61,7 @@ def Isolation(Z_n, alpha=1):
 	Z_top, Z_bot, div = None, None, None
 	return mean, var
 
-def DFT(Z):
+def DFT(Z, thresh):
 	Z_hat = np.fft.fftn(Z, axes=(1,))
 	return np.abs(Z_hat)
 

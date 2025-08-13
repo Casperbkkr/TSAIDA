@@ -3,7 +3,7 @@ import time
 import numpy as np
 
 from Data.Processes import Wiener as wien, Heston as hes
-
+from Data.Processes import GBM as gbm
 n_experiments = 100
 n_samples = 20
 n_steps = 10000
@@ -35,7 +35,7 @@ rho[1000:1500,:] = 1
 
 
 epoch_time = int(time.time())
-new_dir = pathlib.Path('../Synth_data', "corr_data_" + str(epoch_time))
+new_dir = pathlib.Path('..', "corr_data_" + str(epoch_time))
 new_dir.mkdir(parents=True, exist_ok=True)
 new_file = new_dir / 'Parameters.txt'
 new_file.write_text('Theta = ' + str(the) + '\nsigma = ' + str(sigm) +
@@ -50,7 +50,9 @@ for experiment in range(n_experiments):
     print(experiment)
     dW = wien.Correlated_Wiener(rho, T, n_steps, n_samples, c_range=c_range)
     data_out[experiment,:,:] = hes.CIR(thet, sigma, mu, T, n_samples, n_steps, S0, dW)
-    np.save("../Synth_data/corr_data_" + str(epoch_time)+"/cor_data", data_out)
+    data_out[experiment, :, :] = hes.CIR(thet, sigma, mu, T, n_samples, n_steps, S0, dW)
+
+np.save("../Synth_data/corr_data_" + str(epoch_time)+"/cor_data", data_out)
 
 
 

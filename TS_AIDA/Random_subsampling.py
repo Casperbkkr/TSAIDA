@@ -59,10 +59,8 @@ def Random_subsampler(paths, N, parameters, local=False, window_corrected=False,
     return (sample_lengths, sample_start, sample_end, sample_d)
 
 
-def Exclusion_zone(sample_start, sample_end, r):
 
 
-    return
 def Sample_n(N, n_samples_min_max, rng):
     return rng.integers(low=n_samples_min_max[0], high=n_samples_min_max[1], size=N)
 

@@ -10,8 +10,8 @@ from TS_AIDA import Random_subsampling as ss2
 import seaborn as sns
 sns.set_theme()
 
-data = np.load("/Users/casperbakker/PycharmProjects/PythonProject/Data/Synth_data/period_data_1754391695/data.npy")
-anom = np.load("/Users/casperbakker/PycharmProjects/PythonProject/Data/Synth_data/period_data_1754391695/anom.npy")
+data = np.load("/Data/Synth_data/Period/period_data_1754391695/data.npy")
+anom = np.load("/Data/Synth_data/Period/period_data_1754391695/anom.npy")
 
 def sig_rp(X, K, interval, indices, context):
     times = indices

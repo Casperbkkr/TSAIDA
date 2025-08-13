@@ -1,3 +1,5 @@
+import gc
+
 import numpy as np
 import matplotlib.pyplot as plt
 import roughpy as rp
@@ -6,6 +8,7 @@ import roughpy as rp
 from TS_AIDA import Window as Wd
 from TS_AIDA import AIDA as AIDA
 from TS_AIDA import Path_signature as Ps
+
 def sampler(paths, sample_info, i):
     paths = paths[:, sample_info[3][i]]
 
@@ -22,38 +25,62 @@ def sampler(paths, sample_info, i):
     return subsample
 
 
+def Exclusion_zone(sample_info, i, r):
+    starts = sample_info[1][i]
 
+    starts = np.repeat(starts[np.newaxis, :], starts.shape[0], axis=0)
+    ends = sample_info[2][i]
 
-def Score_aggregator(paths, sample_info, K, T, normalize=True, sig=False):
+    ends = np.repeat(ends[np.newaxis, :], starts.shape[0], axis=0)
+    overlap = (ends - starts.transpose())
+    overlap = np.where(np.abs(overlap) < sample_info[0][i], overlap, 0)
+    R = overlap/sample_info[0][i]
+    R = np.where(np.abs(R) > r, 0, 1)
+    R = R*[i for i in range(starts.shape[1])]
+    return R
+
+def Score_aggregator(paths, sample_info, K, T, normalize=False, sig=False, fourier=False, r=0.3):
     N = sample_info[0].shape[0]
     output = np.zeros(shape=[paths.shape[0],2])
     output_global = np.zeros(shape=[paths.shape[0]])
     for i in range(N):
-        if i %50 == 0: print(i)
+        #if i %50 == 0: print(i)
         score_sub = np.zeros(shape=[paths.shape[0], 2])
 
         s1 = sampler(paths, sample_info, i)
-
+        excl = Exclusion_zone(sample_info, i, r)
         if normalize is True:
             s2 = (s1 - np.mean(s1, axis=0)) / s1.std(axis=0)
         if normalize is False:
             s2 = s1
 
-
-        if sig == True:
-            interval = rp.RealInterval(0, sample_info[0][i])
-            indices = np.linspace(0.1, T, sample_info[0][i])
-            context = rp.get_context(width=s2.shape[2], depth=K, coeffs=rp.DPReal)
-
-            s3 = Ps.sig_rp2(s2, K, interval, indices, context)
-        if sig == False:
+        if fourier == True:
+            thresh = 100
+            s3 = AIDA.DFT(s2, thresh)
+        else:
             s3 = s2
 
-        contrast = np.zeros(shape=[s3.shape[0], 1])
+        if sig == True:
+            K2 =  K#max(2, K-len(sample_info[3][i]))
+            interval = rp.RealInterval(0, sample_info[0][i])
+            indices = np.linspace(0.1, T, sample_info[0][i])
+            context = rp.get_context(width=s3.shape[2], depth=K2, coeffs=rp.DPReal)
 
-        for j in range(s3.shape[0]):
-            #excl = Exclusion_zone(s3[j, :], s3, r)
-            score_mean, score_var, cont = AIDA.Score(s3[j, :], s3)
+            s4 = Ps.sig_rp2(s3, K2, interval, indices, context)
+            #interval, indices, context = None, None, None
+
+        if sig == False:
+            s4 = s3
+
+
+
+        contrast = np.zeros(shape=[s4.shape[0], 1])
+
+        for j in range(s4.shape[0]):
+            include = excl[j]
+            include2 =  include[include>0]
+            s5 = np.take(s4, include2, axis=0)
+            score_mean, score_var, cont = AIDA.Score(s4[j, :], s5)
             contrast[j] = cont
             a = sample_info[1][i][j]
             b = sample_info[2][i][j]
@@ -66,7 +93,13 @@ def Score_aggregator(paths, sample_info, K, T, normalize=True, sig=False):
         output[:, 0] += score_sub[:, 0]
         output[:, 1] += score_sub[:, 1]
 
-        output_global[:] += score_sub[:, 0]/sample_info[0][i]
+        W_len = sample_info[0][i]
+        corrector = W_len*np.ones_like(score_sub[:, 0])
+        corrector[:W_len-1]= np.arange(1,W_len)
+        G = np.flip(np.arange(1,W_len+1))
+        corrector[-(W_len):] = G
+
+        output_global[:] += score_sub[:, 0]/corrector
         # /score_sub[:,1]
             # score_sub[:, 0] = np.nan_to_num(score_sub[:, 0])
 
