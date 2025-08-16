@@ -4,7 +4,7 @@ import subprocess
 import time
 
 
-Data_dir = "/Users/casperbakker/PycharmProjects/PythonProject/Data/Synth_data"
+Data_dir = "/Users/casperbakker/PycharmProjects/PythonProject/Data/Convergence"
 
 parameter_sets_file = "/Users/casperbakker/PycharmProjects/PythonProject/Data/Parameter_set"
 
@@ -13,8 +13,8 @@ for filename in os.listdir(Data_dir):
     for type in os.listdir(Data_dir + "/" + filename):
         for data in os.listdir(Data_dir + "/" + filename + "/" + type):
             data_name = Data_dir + "/"+ filename + "/" + type
-            for parameter_set in range(0,8):#os.listdir(parameter_sets_file):
-                for dim_anom in range(10):
+            for parameter_set in range(0,2):#os.listdir(parameter_sets_file):
+                for N in [50,100, 200,400, 800]:
 
                     start = time.time()
 
@@ -22,6 +22,6 @@ for filename in os.listdir(Data_dir):
                                       score_calculator_script,
                                       data_name,
                                       str(parameter_set),
-                                      str(dim_anom)])
+                                      str(N)])
                     end = time.time()
                     print("elapsed_time is:" +str( end - start))

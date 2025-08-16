@@ -27,7 +27,7 @@ for i in range(n_experiments):
     x3 = np.repeat(x2, dim, axis=1)
 
     trans_para = 20
-    trans = rng.uniform(0,trans_para, size=dim)
+    trans = rng.uniform(0,0, size=dim)
     trans = trans[np.newaxis, :]
     trans = np.repeat(trans, steps, axis=0)
 
@@ -48,7 +48,7 @@ for i in range(n_experiments):
     amp = amp[np.newaxis, :]
     amp = np.repeat(amp, steps, axis=0)
 
-    noise_scale = 0.5
+    noise_scale = 0
     cauchy_scale = 0#.01
     noise1 = rng.normal(loc=0.0, scale=noise_scale, size=x3.shape)
     noise2 = stats.cauchy.rvs(loc=0.0, scale=cauchy_scale, size=x3.shape)
@@ -68,19 +68,19 @@ for i in range(n_experiments):
     sin_out[i, :, :, 0] = sin
     anom_out[i, :] = anom
 
-    amp[start_anom:end_anom, :] = amp[start_anom:end_anom, :] / 5
+    amp[start_anom:end_anom, :] = amp[start_anom:end_anom, :] * 2
 
     sin = amp * np.sin(x3 / period + shift) + trans + noise
     sin_out[i, :, :, 1] = sin
 
     #period[start_anom:end_anom, :5] = period[start_anom:end_anom, :5]/5
-    #plt.plot(sin_out[i, :, :, 1])
-    #plt.show()
+    plt.plot(sin_out[i, :, :, 1])
+    plt.show()
 
 epoch_time = int(time.time())
 
 
-new_dir = pathlib.Path('/Users/casperbakker/PycharmProjects/PythonProject/Data/Synth_data/Period/', "period_data_" + str(epoch_time))
+new_dir = pathlib.Path('/Data/Real_data/Dim_corr/', "period_data_" + str(epoch_time))
 new_dir.mkdir(parents=True, exist_ok=True)
 new_file = new_dir / 'Parameters.txt'
 new_file.write_text('transpose = ' + str(trans_para) +
@@ -93,7 +93,7 @@ new_file.write_text('transpose = ' + str(trans_para) +
                         '\ncauchy_scale = ' + str(cauchy_scale)
                     )
 
-np.save("/Users/casperbakker/PycharmProjects/PythonProject/Data/Synth_data/Period/period_data_" + str(epoch_time) + "/data", sin_out)
-np.save("/Users/casperbakker/PycharmProjects/PythonProject/Data/Synth_data/Period/period_data_" + str(epoch_time) + "/anom", anom_out)
+np.save("/Users/casperbakker/PycharmProjects/PythonProject/Data/Synth_data/Dim_corr/period_data_" + str(epoch_time) + "/data.npy", sin_out)
+np.save("/Users/casperbakker/PycharmProjects/PythonProject/Data/Synth_data/Dim_corr/period_data_" + str(epoch_time) + "/anom.npy", anom_out)
 
 

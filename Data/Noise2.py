@@ -13,7 +13,7 @@ sns.set_theme()
 
 T = 3600
 dim = 10
-n_steps = 10000
+n_steps = 1000
 K=4
 n_experiments=100
 
@@ -42,7 +42,7 @@ for i in range(n_experiments):
 
 
     indices, intensity, _ = Ha.Hawkes(n_steps, rate, excite_rate, decay_rate, T, dim)
-    intensity = intensity[:,np.newaxis]/100
+    intensity = intensity[:,np.newaxis]/10
     #plt.plot(intensity)
 
     #plt.show()
@@ -59,8 +59,8 @@ for i in range(n_experiments):
     A = np.linspace(0, T, n_steps)
     A = A[:,np.newaxis]
     A = np.repeat(A, dim, axis=1)
-    period_low = 10
-    period_high = 20 * np.pi
+    period_low = 90
+    period_high = 120
     period = rng.uniform(period_low, period_high, size=dim)
     period = period[np.newaxis, :]
     period = np.repeat(period, n_steps, axis=0)
@@ -74,7 +74,7 @@ for i in range(n_experiments):
     noise_scale_anom = np.zeros_like(noise_scale)
     noise_scale_anom[:start_anom] = noise_scale[:start_anom]
     noise_scale_anom[end_anom:] = noise_scale[end_anom:]
-    noise_scale_anom[start_anom:end_anom, :] = noise_scale[start_anom, :]
+    noise_scale_anom[start_anom:end_anom, :] = 0
     theta = 0.01 * np.ones([n_steps, dim])
     sigma = 0.1 * np.ones([n_steps, dim])
     mu = 0.01*np.ones([n_steps, dim])
@@ -102,8 +102,8 @@ for i in range(n_experiments):
 
 
         #x3[start_anom:end_anom, :5] = x3[start_anom, :5]
-    sin_normal = noise1 + trans
-    sin_anom = noise2 + trans # noise3
+    sin_normal = noise1
+    sin_anom = noise2
 
     #sin_anom[start_anom:end_anom, :] = noise2[start_anom:end_anom, :]
 
@@ -111,11 +111,12 @@ for i in range(n_experiments):
     sin_out[i,:,:,1] = sin_anom
     anom_out[i,:] = anom
 
-    epoch_time = int(time.time())
 
 
+    plt.plot(sin_anom)
+    plt.show()
 
-
+epoch_time = int(time.time())
 new_dir = pathlib.Path( "Noise2_data_" + str(epoch_time))
 new_dir.mkdir(parents=True, exist_ok=True)
 new_file = new_dir / 'Parameters.txt'
@@ -124,5 +125,5 @@ new_file.write_text('transpose = ' + str(trans_para) +
                         '\nRho='+ str(rhos))
 
 
-np.save("../Noise/Noise2_data_" + str(epoch_time) + "/data", sin_out)
-np.save("../Noise/Noise2_data_" + str(epoch_time) + "/anom", anom_out)
+np.save("Noise2_data_" + str(epoch_time) + "/data", sin_out)
+np.save("Noise2_data_" + str(epoch_time) + "/anom", anom_out)

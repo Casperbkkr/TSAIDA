@@ -13,11 +13,11 @@ sns.set_theme()
 
 T = 100
 dim = 10
-steps = 10000
+steps = 1000
 dt = T/steps
 
-n_experiments=100
-n_events = 100
+n_experiments = 100
+n_events = 200
 
 n_anomalous_events = 1
 sin_out = np.zeros(shape=[n_experiments, steps, dim, 2])
@@ -43,7 +43,7 @@ for i in range(n_experiments):
     amp = np.repeat(amp, steps, axis=0)
 
 
-    noise_scale = 0.1
+    noise_scale = 0
     cauchy_scale = 0#.001
     noise1 = rng.normal(loc=0.0, scale=noise_scale, size=x3.shape)
     #noise1[:,:] = 0
@@ -58,12 +58,12 @@ for i in range(n_experiments):
     anom = np.zeros(shape=steps)
     anom[start_anom:end_anom] = 1
 
-    ad = np.arange(0, steps, n_events, dtype=int)
+    ad = np.arange(0, steps-30, dtype=int)
     starts = rng.choice(ad, n_events)
     starts = starts.tolist()
 
     period_low = 3
-    period_high = 30
+    period_high = 4
 
     G = np.zeros_like(x3)
     anom_starts = []
@@ -73,7 +73,7 @@ for i in range(n_experiments):
         event = np.zeros_like(G)
 
         start = starts[k]
-        print(start)
+
         amp_low = 1
         amp_high = 5
         amp = rng.uniform(amp_low, amp_high, size=dim)
@@ -87,6 +87,8 @@ for i in range(n_experiments):
         f = period / dt
         r1 = f.astype(np.int32)
         max_length = np.max(r1)
+        f = used[start:start + max_length]
+
         if np.sum(used[start:start + max_length]) > 0:
             continue
         else:
@@ -94,7 +96,7 @@ for i in range(n_experiments):
                 length = r1[:,d][0]
                 sine_part = sines[:length, d]
                 event[start:start+length, d] = sine_part
-                used[start:start + length] += 1
+            used[start:start + max_length] = 1
 
         G += event
         anom_starts.append(start)
@@ -125,15 +127,14 @@ for i in range(n_experiments):
         print(start)
 
     #period[start_anom:end_anom, :5] = period[start_anom:end_anom, :5]/5
-    sin_out[i,:,:,0] = noise + trans + G
-    sin_out[i,:,:,1] = noise + trans + G2
+    sin_out[i,:,:,0] = noise  + G
+    sin_out[i,:,:,1] = noise + G2
 
 
     plt.plot(sin_out[i,:,:,0])
     plt.show()
     plt.plot(sin_out[i,:,:,1] )
     plt.show()
-
 
 
 new_dir = pathlib.Path("/Users/casperbakker/PycharmProjects/PythonProject/Data/Synth_data/Order/", "Ordered_events_" + str(epoch_time))

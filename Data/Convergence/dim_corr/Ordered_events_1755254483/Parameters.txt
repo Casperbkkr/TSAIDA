@@ -1,0 +1,5 @@
+transpose = 20
+noise_scale = 0
+cauchy_scale = 0
+anom events = 200
+anom events = 1

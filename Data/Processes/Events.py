@@ -13,8 +13,8 @@ def Event_location(n_samples, n_steps, T, rate, dim_min_max, rebound=False, rebo
     n_dims = rng.choice(choice_dims, size=n_events)
 
     dims = [i for i in range(0, n_samples)]
-    #event_dim = [rng.choice(dims, replace=False, size=n_dims[i]) for i in range(n_events)]
-    event_dim = [0 for i in range(n_events)]
+    event_dim = [rng.choice(dims, replace=False, size=n_dims[i]) for i in range(n_events)]
+    #event_dim = [0 for i in range(n_events)]
     if rebound == True:
         ret = rng.poisson(lam=rebound_rate_dt, size=(n_events, n_steps))
         ret[:,-1] = 1
@@ -23,7 +23,7 @@ def Event_location(n_samples, n_steps, T, rate, dim_min_max, rebound=False, rebo
         for i in range(n_events):
             # TODO door de poisson komt er niet altijd een 1 in ret.
             indices_i = np.where(ret[i,:] == 1)
-            if indices_i[0][0] > n_steps/50:
+            if indices_i[0][0] > n_steps/60:
                 indices.append(int(n_steps/50))
             else:
                 indices.append(indices_i[0][0])

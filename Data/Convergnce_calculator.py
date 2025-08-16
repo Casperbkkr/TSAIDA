@@ -8,33 +8,27 @@ import matplotlib.pyplot as plt
 if __name__ == "__main__":
     file_name = sys.argv[1]
     parameter_number = int(sys.argv[2])
-    dim_anom = int(sys.argv[3])
+    N = int(sys.argv[3])
 
-print(parameter_number, file_name, dim_anom)
+print(parameter_number, file_name, N)
 
 
 Data_np = np.load(file_name+"/data.npy" )
 Anom_np = np.load(file_name+"/data.npy")
 
-Data_mix = dm.Mixer(Data_np[:,:,:,1],Data_np[:,:,:,0], dim_anom)
+Data_mix = dm.Mixer(Data_np[:,:,:,1],Data_np[:,:,:,0], 3)
 #Data_mix = Data_np
 
 
 N = 100
 P1 = [20, 50, 2,5,10,50,5, 3, True, True, True]
 P2 = [20, 50, 2,5,10,50,5, 3, True, True, False]
-P3 = [20, 50, 2,5,10,50,5, 3, False, True, True]
-P4 = [20, 50, 2,5,10,50,5, 3, False, True, False]
-
-P5 = [20, 100, 2,5,10,50,5, 3, True, True, True]
-P6 = [20, 100, 2,5,10,50,5, 3, True, True, False]
-P7 = [20, 100, 2,5,10,50,5, 3, False, True, True]
-P8 = [20, 100, 2,5,10,50,5, 3, False, True, False]
 
 
 
 
-parameter_sets = [P1, P2, P3, P4, P5, P6, P7, P8]
+
+parameter_sets = [P1, P2]
 current_parameters = parameter_sets[parameter_number]
 
 w_min = P1[0]
@@ -109,5 +103,5 @@ plt.plot(Data_mix[1,:,2])
 plt.plot(Data_mix[1,:,3])
 plt.show()
 np.save(
-    str(new_dir) + "/score_d"+str(dim_anom)+".npy",
+    str(new_dir) + "/score_N"+str(N)+".npy",
     output)

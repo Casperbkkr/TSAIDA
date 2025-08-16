@@ -1,0 +1,4 @@
+transpose = 20
+noise_scale = 0.1
+cauchy_scale = 0.01
+Rho=[0, 1, 0]

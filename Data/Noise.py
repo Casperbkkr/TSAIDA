@@ -51,13 +51,13 @@ for i in range(n_experiments):
     c_range = [[0, start_anom], [start_anom, end_anom], [end_anom, -1]]
     #c_range = [[0, 300], [300, 600], [600, -1]]
     rho = np.zeros(shape=(n_steps, dim))
-    rhos = [-0.9, 1, -0.9]
+    rhos = [0, 1, 0]
     for y in range(len(c_range)):
         ranges = c_range[y]
         rho[ranges[0]:ranges[1], :] = rhos[y]
 
 
-    noise_scale = 0.05
+    noise_scale = 0.1
     cauchy_scale = 0.01
 
     theta = 0.01 * np.ones([n_steps, dim])
@@ -71,17 +71,13 @@ for i in range(n_experiments):
     noise1 = W#rng.normal(loc=0.0, scale=A, size=x3.shape)
     noise3 = stats.cauchy.rvs(loc=0.0, scale=intensity, size=x3.shape)
 
-    #noise1[:,:] = 0
+
 
     noise = noise1 #+ noise2
-
-
 
     anom = np.zeros(shape=n_steps)
     anom_data = np.zeros(shape=(n_steps, dim))
     anom[start_anom:end_anom] = 1
-
-
 
     trans[:,:] = 0
 

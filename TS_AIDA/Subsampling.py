@@ -39,7 +39,7 @@ def Exclusion_zone(sample_info, i, r):
     R = R*[i for i in range(starts.shape[1])]
     return R
 
-def Score_aggregator(paths, sample_info, K, T, normalize=False, sig=False, fourier=False, r=0.3):
+def Score_aggregator(paths, sample_info, K, T, normalize=False, sig=False, fourier=False, r=0.6):
     N = sample_info[0].shape[0]
     output = np.zeros(shape=[paths.shape[0],2])
     output_global = np.zeros(shape=[paths.shape[0]])
